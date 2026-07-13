@@ -2617,5 +2617,59 @@
         "type": "BUG",
         "debt": "5min",
         "active": true
+    },
+    {
+        "key": "strict_top_level_inference",
+        "name": "Strict top level inference",
+        "severity": "MINOR",
+        "description": "<SECTION><P><STRONG>DO</STRONG> specify type annotations for top-level and class members.</P>\n<P>Missing annotations force the analyzer to infer types (often <CODE>dynamic</CODE>), weakening static checks. Annotate declarations explicitly.</P>\n<P><see href=\"https://dart.dev/tools/linter-rules/strict_top_level_inference\"/></P>\n</SECTION>",
+        "type": "CODE_SMELL",
+        "debt": "5min",
+        "active": true
+    },
+    {
+        "key": "unnecessary_underscores",
+        "name": "Unnecessary underscores",
+        "severity": "INFO",
+        "description": "<SECTION><P>A single <CODE>_</CODE> already denotes an unused parameter or local variable.</P>\n<P>Additional underscores (<CODE>__</CODE>, <CODE>___</CODE>) are unnecessary; replace them with a single <CODE>_</CODE>.</P>\n</SECTION>",
+        "type": "CODE_SMELL",
+        "debt": "2min",
+        "active": true
+    },
+    {
+        "key": "unnecessary_ignore",
+        "name": "Unnecessary ignore",
+        "severity": "INFO",
+        "description": "<SECTION><P>Remove <CODE>// ignore:</CODE> and <CODE>// ignore_for_file:</CODE> comments that suppress a diagnostic which is not actually produced.</P>\n<P>Stale ignore comments hide the fact that the underlying issue is gone.</P>\n</SECTION>",
+        "type": "CODE_SMELL",
+        "debt": "2min",
+        "active": true
+    },
+    {
+        "key": "use_null_aware_elements",
+        "name": "Use null-aware elements",
+        "severity": "MINOR",
+        "description": "<SECTION><P>Use the null-aware element marker (<CODE>?</CODE>) inside a collection literal instead of a conditional or explicit null check.</P>\n<P>It is more concise and clearer than filtering nulls manually.</P>\n</SECTION>",
+        "type": "CODE_SMELL",
+        "debt": "5min",
+        "active": true
+    },
+    {
+        "key": "avoid_futureor_void",
+        "name": "Avoid FutureOr&lt;void&gt;",
+        "severity": "MINOR",
+        "description": "<SECTION><P>Avoid using <CODE>FutureOr&lt;void&gt;</CODE> as a type.</P>\n<P>Its value cannot be used meaningfully and the type is error-prone; prefer <CODE>Future&lt;void&gt;</CODE> or <CODE>void</CODE>.</P>\n</SECTION>",
+        "type": "CODE_SMELL",
+        "debt": "5min",
+        "active": true
+    },
+    {
+        "key": "unnecessary_async",
+        "name": "Unnecessary async",
+        "severity": "MINOR",
+        "description": "<SECTION><P>Don't mark a function <CODE>async</CODE> if it doesn't use <CODE>await</CODE>.</P>\n<P>The <CODE>async</CODE> modifier adds overhead and needlessly wraps the result in a <CODE>Future</CODE>.</P>\n</SECTION>",
+        "type": "CODE_SMELL",
+        "debt": "5min",
+        "active": true
     }
 ]
