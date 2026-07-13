@@ -1,10 +1,9 @@
 # Ruleset de análise Dart/Flutter aplicado pelo sonar-flutter.
-# Curado: removidos lints inexistentes/removidos (67) e regras mutuamente
-# exclusivas (5). Conjunto coerente e satisfazível — todas as regras têm
-# entrada correspondente em rules.json. Resoluções de conflito: inferência
-# de tipo (não always_specify_types), aspas simples (prefer_single_quotes),
-# package imports (always_use_package_imports), e preferir final em
-# locals/fields (não unnecessary_final).
+# Curado: removidos lints inexistentes/removidos e regras mutuamente
+# exclusivas; adicionados lints modernos (Dart 3.7+). Conjunto coerente e
+# satisfazível — toda regra tem entrada correspondente em rules.json.
+# Conflitos resolvidos: inferência de tipo (não always_specify_types),
+# aspas simples, package imports, preferir final em locals/fields.
 linter:
   rules:
     - always_declare_return_types
@@ -27,6 +26,7 @@ linter:
     - avoid_field_initializers_in_const_classes
     - avoid_final_parameters
     - avoid_function_literals_in_foreach_calls
+    - avoid_futureor_void
     - avoid_implementing_value_types
     - avoid_init_to_null
     - avoid_js_rounded_ints
@@ -166,6 +166,7 @@ linter:
     - sort_constructors_first
     - sort_pub_dependencies
     - sort_unnamed_constructors_first
+    - strict_top_level_inference
     - test_types_in_equals
     - throw_in_finally
     - tighten_type_of_initializing_formals
@@ -174,12 +175,14 @@ linter:
     - type_literal_in_constant_pattern
     - unawaited_futures
     - unintended_html_in_doc_comment
+    - unnecessary_async
     - unnecessary_await_in_return
     - unnecessary_brace_in_string_interps
     - unnecessary_breaks
     - unnecessary_const
     - unnecessary_constructor_name
     - unnecessary_getters_setters
+    - unnecessary_ignore
     - unnecessary_lambdas
     - unnecessary_late
     - unnecessary_library_directive
@@ -198,6 +201,7 @@ linter:
     - unnecessary_string_interpolations
     - unnecessary_this
     - unnecessary_to_list_in_spreads
+    - unnecessary_underscores
     - unreachable_from_main
     - unrelated_type_equality_checks
     - unsafe_html
@@ -212,6 +216,7 @@ linter:
     - use_key_in_widget_constructors
     - use_late_for_private_fields_and_variables
     - use_named_constants
+    - use_null_aware_elements
     - use_raw_strings
     - use_rethrow_when_possible
     - use_setters_to_change_properties
