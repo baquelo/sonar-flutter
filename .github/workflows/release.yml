@@ -1,21 +1,30 @@
 name: Release
 
+# Fires when you publish a Release from the GitHub UI (which also creates the
+# tag). The job builds the plugin and attaches the jar to that release.
 on:
-  push:
-    tags:
-      - 0.*
+  release:
+    types: [published]
 
 permissions:
-  contents: write  # required to create the GitHub Release and upload the jar
+  contents: write  # required to upload the jar asset to the release
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Resolve version
+        id: ver
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"   # strip an optional leading "v"
+
+      - name: Checkout the released tag
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
+          ref: ${{ steps.ver.outputs.tag }}
           fetch-depth: 0
 
       - name: Set up JDK 17
@@ -26,20 +35,16 @@ jobs:
           check-latest: true
           cache: maven
 
-      # Align the project version with the tag (e.g. tag 0.6.0 -> version 0.6.0).
-      - name: Set version from tag
-        run: mvn -B versions:set -DnewVersion=${{ github.ref_name }} -DgenerateBackupPoms=false
+      # Align the project version with the release tag (e.g. 0.6.0 -> 0.6.0).
+      - name: Set version from release
+        run: mvn -B versions:set -DnewVersion=${{ steps.ver.outputs.version }} -DgenerateBackupPoms=false
 
       - name: Build
         run: mvn -B package
 
-      - name: Publish GitHub Release with the plugin jar
+      - name: Attach the plugin jar to the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" \
-            sonar-flutter-plugin/target/sonar-flutter-plugin-*.jar \
-            --title "${{ github.ref_name }}" \
-            --generate-notes \
-          || gh release upload "${{ github.ref_name }}" \
+          gh release upload "${{ steps.ver.outputs.tag }}" \
             sonar-flutter-plugin/target/sonar-flutter-plugin-*.jar --clobber
