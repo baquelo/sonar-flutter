@@ -1,54 +1,64 @@
-name: CI
+name: Build
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    name: Build and analyze
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
-
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Set up JDK 1.11
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
+          distribution: temurin
           java-version: '17'
           check-latest: true
-          cache: 'maven'
+          cache: maven
 
-      - name: License Header Check
-        run: mvn license:check
+      - name: License header check
+        run: mvn -B license:check
 
-      - name: Build
-        run: mvn -B package --file pom.xml
+      # Build + unit tests + JaCoCo coverage (runs on push and PRs).
+      - name: Build and test
+        run: mvn -B verify
 
-      - name: Analyze
+      # SonarQube analysis via the Maven plugin (Java needs compiled bytecode +
+      # coverage, so the scanner is driven by Maven, not the standalone CLI).
+      # Community Build is single-branch, so we only analyze on master.
+      - name: SonarQube analysis
+        if: github.event_name != 'pull_request'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.organization=insideapp-oss \
-          -Dsonar.projectKey=insideapp-oss_sonar-flutter
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: >
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=baquelo_sonar-flutter_4255b49a-4446-4bcd-ad10-2ad6bd1a58d6
 
-      - name: Read version
-        run: echo "version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_ENV
-
-      - name: Upload snapshot release
-        if: github.ref == 'refs/heads/develop'
-        uses: svenstaro/upload-release-action@v2
+      - name: Quality Gate
+        if: github.event_name != 'pull_request'
+        uses: SonarSource/sonarqube-quality-gate-action@cf038b0e0cdecfa9e56c198bbb7d21d751d62c3b # v1.2.0
+        timeout-minutes: 5
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{github.workspace}}/sonar-flutter-plugin/target/*.jar
-          tag: ${{env.version}}
-          release_name: ${{env.version}}
-          overwrite: true
-          body: "Snapshot release"
-          file_glob: true
-          prerelease: true
+          scanMetadataReportFile: target/sonar/report-task.txt
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
