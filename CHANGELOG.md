@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0
+
+#### Breaking
+
+- Minimum SonarQube version is now **2025.1** (plugin API `11.x`). For older servers (≤ 10.x / 9.9 LTS), keep using 0.5.2.
+- Build now requires **Java 17**.
+
+#### Enhancements
+
+- Compatibility with **SonarQube Community Build 25.x / 26.x** (verified on 26.7.0.124771). Fixes the plugin failing to load with `BeanDefinitionOverrideException` on SonarQube 2025.1+ ([#248](https://github.com/insideapp-oss/sonar-flutter/discussions/248)).
+- Migrated to the split `org.sonarsource.api.plugin:sonar-plugin-api` and to SLF4J logging (the legacy `org.sonar.api.utils.log` API was removed).
+
+#### Bug Fixes
+
+- Replaced the removed internal `DefaultIssueLocation` with the public `NewIssue#newLocation()` API.
+
 ## 0.5.2
 
 #### Breaking

@@ -22,14 +22,14 @@ import fr.insideapp.sonarqube.dart.lang.issues.RepositoryRule;
 import fr.insideapp.sonarqube.dart.lang.issues.RepositoryRuleParser;
 import org.sonar.api.rules.RuleType;
 import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 
 public class DartAnalyzerRulesDefinition implements RulesDefinition {
-    private static final Logger LOGGER = Loggers.get(DartAnalyzerRulesDefinition.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DartAnalyzerRulesDefinition.class);
     public static final String REPOSITORY_KEY = "dartanalyzer";
     public static final String REPOSITORY_NAME = REPOSITORY_KEY;
     public static final String RULES_FILE = "/dartanalyzer/rules.json";

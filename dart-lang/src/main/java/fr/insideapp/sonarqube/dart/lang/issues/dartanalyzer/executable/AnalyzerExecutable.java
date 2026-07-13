@@ -25,8 +25,8 @@ import fr.insideapp.sonarqube.dart.lang.issues.dartanalyzer.DartAnalyzerSensor;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -50,7 +50,7 @@ public abstract class AnalyzerExecutable {
         public static final Mode defaultMode = DETECT;
     }
 
-    protected static final Logger LOGGER = Loggers.get(AnalyzerExecutable.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AnalyzerExecutable.class);
 
     private static final int ANALYZER_TIMEOUT = 10 * 60 * 1000;
     private static final String ANALYSIS_OPTIONS_FILENAME = "analysis_options.yaml";
