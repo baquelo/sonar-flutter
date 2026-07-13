@@ -20,10 +20,13 @@ package fr.insideapp.sonarqube.dart.lang.issues.dartanalyzer;
 import org.junit.Test;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
+import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -54,7 +57,7 @@ public class DartAnalyzerReportIssueTest {
     @Test
     public void validIssueLocationWithoutColumn() {
         DartAnalyzerReportIssue issue = new DartAnalyzerReportIssue("1", "msg", "/test/path", 1);
-        issue.toNewIssueLocationFor(testFile());
+        issue.toNewIssueLocationFor(newIssue(), testFile());
     }
 
     @Test
@@ -80,7 +83,7 @@ public class DartAnalyzerReportIssueTest {
     public void validIssueLocationWithColumnMaxLength() throws IOException {
         DartAnalyzerReportIssue issue = new DartAnalyzerReportIssue("1", "msg", "/test/path", 1, 10, 10);
         DefaultInputFile inputFile = testFile();
-        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(inputFile);
+        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(newIssue(), inputFile);
 
         assertThat(location.textRange().start().lineOffset()).isEqualTo(9);
         assertThat(location.textRange().end().lineOffset()).isEqualTo(19);
@@ -89,7 +92,7 @@ public class DartAnalyzerReportIssueTest {
     @Test
     public void validIssueLocationWithColumnFullLine() {
         DartAnalyzerReportIssue issue = new DartAnalyzerReportIssue("1", "msg", "/test/path", 1, 1, 19);
-        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(testFile());
+        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(newIssue(), testFile());
 
         assertThat(location.textRange().start().lineOffset()).isZero();
         assertThat(location.textRange().end().lineOffset()).isEqualTo(19);
@@ -98,7 +101,7 @@ public class DartAnalyzerReportIssueTest {
     @Test
     public void validIssueLocationWithColumnLengthOne() {
         DartAnalyzerReportIssue issue = new DartAnalyzerReportIssue("1", "msg", "/test/path", 1, 10, 1);
-        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(testFile());
+        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(newIssue(), testFile());
         assertThat(location.textRange().start().lineOffset()).isEqualTo(9);
         assertThat(location.textRange().end().lineOffset()).isEqualTo(10);
     }
@@ -106,9 +109,15 @@ public class DartAnalyzerReportIssueTest {
     @Test
     public void validIssueLocationWithColumnButNoLength() {
         DartAnalyzerReportIssue issue = new DartAnalyzerReportIssue("1", "msg", "/test/path", 1, 10, null);
-        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(testFile());
+        DefaultIssueLocation location = (DefaultIssueLocation) issue.toNewIssueLocationFor(newIssue(), testFile());
         assertThat(location.textRange().start().lineOffset()).isEqualTo(9);
         assertThat(location.textRange().end().lineOffset()).isEqualTo(19);
+    }
+
+    private NewIssue newIssue() {
+        // A standalone NewIssue whose newLocation() yields a DefaultIssueLocation,
+        // matching the pre-migration behaviour the assertions rely on.
+        return SensorContextTester.create(Paths.get(".")).newIssue();
     }
 
     private DefaultInputFile testFile() {

@@ -4,9 +4,9 @@ This documentation is a guide for plugin developers / contributors.
 
 ## Requirements
 
-- Java JDK 11+
+- Java JDK 17+
 - Maven 3.8 or later
-- A local SonarQube instance for local testing
+- A local SonarQube instance for local testing (SonarQube 2025.1+ / Community Build 25.x–26.x)
 
 ## Main commands
 

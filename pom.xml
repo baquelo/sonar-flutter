@@ -4,7 +4,7 @@
     
     <groupId>fr.insideapp.sonarqube</groupId>
     <artifactId>sonar-flutter</artifactId>
-    <version>0.5.2</version>
+    <version>0.6.0</version>
 
     <packaging>pom</packaging>
 
@@ -55,10 +55,15 @@
         <license.mailto>contact@insideapp.fr</license.mailto>
 
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
-        <jdk.min.version>1.9</jdk.min.version>
+        <jdk.min.version>17</jdk.min.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <sonar.version>7.9</sonar.version>
+        <!-- sonar-plugin-api (coordenadas novas pós-2021). 11.1.0.2693 = a que acompanha o SonarQube 2025.1 LTA; compatível com a Community Build 26.7. -->
+        <sonar.version>11.1.0.2693</sonar.version>
+        <!-- sonar-plugin-api-impl (test-only): test doubles internos (SensorContextTester, TestInputFileBuilder,
+             DefaultInputFile, DefaultSensorDescriptor, DefaultIssueLocation). 10.7.0.96327 é a última versão que
+             ainda os empacota; nas 26.x o artefato foi esvaziado. Usado só em testes. -->
+        <sonar.impl.version>10.7.0.96327</sonar.impl.version>
 
         <assertj.version>3.5.2</assertj.version>
         <junit.version>4.13.1</junit.version>
@@ -81,7 +86,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.sonarsource.sonarqube</groupId>
+            <groupId>org.sonarsource.api.plugin</groupId>
             <artifactId>sonar-plugin-api</artifactId>
             <version>${sonar.version}</version>
             <scope>provided</scope>
@@ -147,9 +152,17 @@
 
         <!-- Test dependencies -->
         <dependency>
-            <groupId>org.sonarsource.sonarqube</groupId>
-            <artifactId>sonar-testing-harness</artifactId>
+            <groupId>org.sonarsource.api.plugin</groupId>
+            <artifactId>sonar-plugin-api-test-fixtures</artifactId>
             <version>${sonar.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Internal test doubles (SensorContextTester, TestInputFileBuilder, DefaultInputFile,
+             DefaultSensorDescriptor, DefaultIssueLocation). Versionado pela versão do SonarQube. -->
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-plugin-api-impl</artifactId>
+            <version>${sonar.impl.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -185,10 +198,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>${jdk.min.version}</source>
-                    <target>${jdk.min.version}</target>
+                    <release>${jdk.min.version}</release>
                     <compilerArgs>
                         <arg>-Xlint</arg>
                     </compilerArgs>
@@ -198,7 +210,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>0.8.13</version>
                 <configuration>
                     <excludes>
                         <exclude>**/generated/**</exclude>

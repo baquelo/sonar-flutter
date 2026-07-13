@@ -26,7 +26,14 @@ A plugin to enable analysis of Dart and Flutter projects into SonarQube.
 | Complexity | YES                                                             |
 | Syntax     | YES                                                             |
 
-The plugin is compatible with sonarQube 7.9+.
+### Compatibility
+
+| Plugin version | SonarQube                                          |
+|----------------|----------------------------------------------------|
+| `0.6.0`+       | SonarQube **2025.1+** / Community Build **25.x, 26.x** (plugin API `11.x`) |
+| `0.5.2`        | SonarQube `7.9` – `10.x` / `9.9 LTS`               |
+
+> On SonarQube 2025.1+ the plugin API moved to Spring; versions `≤ 0.5.2` fail to load there with a `BeanDefinitionOverrideException`. Use `0.6.0`+ on those servers.
 
 ## Download
 
