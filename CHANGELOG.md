@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased
+
+#### Bug Fixes
+
+- The default `dartanalyzer` quality profile no longer advertises rules that can never raise an issue.
+  `rules.json` and the shipped `analysis_options.yaml` had drifted apart, leaving 13 lints active in the
+  profile that the analyzer was never asked to run — reporting 0 issues forever. Five of them were the
+  losing side of a mutually exclusive pair, so the profile contradicted itself: `prefer_final_parameters`
+  alongside `avoid_final_parameters`, `always_specify_types` alongside `omit_local_variable_types`,
+  `prefer_double_quotes` alongside `prefer_single_quotes`, `prefer_relative_imports` alongside
+  `always_use_package_imports`, and `unnecessary_final` alongside `prefer_final_locals`. Those five are now
+  deactivated; the remaining eight are enabled in `analysis_options.yaml` so they take effect, including
+  `no_logic_in_create_state` (part of the official `package:flutter_lints`).
+- Removed five lints that the analyzer was asked to run but the profile discarded, since they were
+  `active: false` in `rules.json`: `always_require_non_null_named_parameters`, `avoid_returning_null`,
+  `avoid_returning_null_for_future`, `iterable_contains_unrelated_type` and `list_remove_unrelated_type`.
+  All five are no-ops on Dart 3 (their replacement, `collection_methods_unrelated_type`, is already
+  enabled), so this is a no-op at analysis time.
+- **Docs:** the "Use existing analysis options" section told readers to set
+  `sonar.dart.analyzer.options.override=true` to *disable* the override. The correct value is `false`, as
+  the properties table already documented — following the text produced the opposite of the intent.
+
+#### Enhancements
+
+- `DartAnalyzerRulesetConsistencyTest` now enforces the invariant that let the two files drift unnoticed:
+  the set of rules active in `rules.json` must equal the lints enabled in `analysis_options.yaml`, plus the
+  analyzer diagnostics listed in `analyzer-diagnostics.txt` (which always run and so have no entry there).
+  Because the analyzer rejects an `analysis_options.yaml` that enables both sides of a mutually exclusive
+  pair, this invariant also makes a self-contradicting profile unrepresentable.
+
 ## 0.6.0
 
 #### Breaking

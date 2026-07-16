@@ -1,15 +1,20 @@
-# Ruleset de análise Dart/Flutter aplicado pelo sonar-flutter.
-# Curado: removidos lints inexistentes/removidos e regras mutuamente
-# exclusivas; adicionados lints modernos (Dart 3.7+). Conjunto coerente e
-# satisfazível — toda regra tem entrada correspondente em rules.json.
-# Conflitos resolvidos: inferência de tipo (não always_specify_types),
-# aspas simples, package imports, preferir final em locals/fields.
+# Dart/Flutter analysis ruleset applied by sonar-flutter.
+#
+# Curated: removed non-existent/removed lints and mutually exclusive rules;
+# added modern lints (Dart 3.7+). Coherent and satisfiable set — every rule
+# here has a matching entry in rules.json.
+# Conflicts resolved in favour of: type inference (not always_specify_types),
+# single quotes, package imports, final on locals/fields.
+#
+# INVARIANT: this set must be exactly the set of lints with "active": true in
+# rules.json. Analyzer diagnostics (which always run) are active in rules.json
+# with no entry here; they are listed in the test resource
+# analyzer-diagnostics.txt. Enforced by DartAnalyzerRulesetConsistencyTest.
 linter:
   rules:
     - always_declare_return_types
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
-    - always_require_non_null_named_parameters
     - always_use_package_imports
     - annotate_overrides
     - annotate_redeclares
@@ -39,8 +44,6 @@ linter:
     - avoid_relative_lib_imports
     - avoid_renaming_method_parameters
     - avoid_return_types_on_setters
-    - avoid_returning_null
-    - avoid_returning_null_for_future
     - avoid_returning_null_for_void
     - avoid_returning_this
     - avoid_setters_without_getters
@@ -90,14 +93,14 @@ linter:
     - implicit_reopen
     - invalid_case_patterns
     - invalid_runtime_check_with_js_interop_types
-    - iterable_contains_unrelated_type
     - join_return_with_assignment
     - leading_newlines_in_multiline_strings
     - library_annotations
     - library_names
     - library_prefixes
     - library_private_types_in_public_api
-    - list_remove_unrelated_type
+    - lines_longer_than_80_chars
+    - literal_only_boolean_expressions
     - matching_super_parameters
     - missing_code_block_language_in_doc_comment
     - missing_whitespace_between_adjacent_strings
@@ -107,6 +110,8 @@ linter:
     - no_leading_underscores_for_library_prefixes
     - no_leading_underscores_for_local_identifiers
     - no_literal_bool_comparisons
+    - no_logic_in_create_state
+    - no_runtimeType_toString
     - no_self_assignments
     - no_wildcard_variable_uses
     - non_constant_identifier_names
@@ -129,6 +134,7 @@ linter:
     - prefer_conditional_assignment
     - prefer_const_constructors
     - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
     - prefer_const_literals_to_create_immutables
     - prefer_constructors_over_static_methods
     - prefer_contains
@@ -136,6 +142,7 @@ linter:
     - prefer_final_fields
     - prefer_final_in_for_each
     - prefer_final_locals
+    - prefer_for_elements_to_map_fromIterable
     - prefer_foreach
     - prefer_function_declarations_over_variables
     - prefer_generic_function_type_aliases
@@ -148,6 +155,7 @@ linter:
     - prefer_is_empty
     - prefer_is_not_empty
     - prefer_is_not_operator
+    - prefer_iterable_whereType
     - prefer_mixin
     - prefer_null_aware_method_calls
     - prefer_null_aware_operators
@@ -161,6 +169,7 @@ linter:
     - require_trailing_commas
     - secure_pubspec_urls
     - sized_box_for_whitespace
+    - sized_box_shrink_expand
     - slash_for_doc_comments
     - sort_child_properties_last
     - sort_constructors_first
