@@ -1,0 +1,67 @@
+# Dart analyzer diagnostics (not lints).
+#
+# These always run, regardless of analysis_options.yaml. They are therefore
+# active:true in rules.json WITHOUT a matching entry in analysis_options.yaml,
+# and are the only legitimate exception to the bijection asserted by
+# DartAnalyzerRulesetConsistencyTest.
+#
+# Derived empirically: a key is a diagnostic if the analyzer answers
+# 'undefined_lint' when it is enabled as a lint. To regenerate:
+#   printf 'linter:\n  rules:\n    - <key>\n' > analysis_options.yaml && dart analyze
+# Verified against Dart SDK 3.12.2.
+
+abi_specific_integer_invalid
+abstract_field_initializer
+argument_must_be_native
+argument_type_not_assignable_to_error_handler
+body_might_complete_normally
+conflicting_constructor_and_static_member
+const_map_key_not_primitive_equality
+dead_null_aware_expression
+deprecated_new_in_comment_reference
+duplicate_constructor
+duplicate_field_name
+duplicate_ignore
+duplicate_pattern_field
+external_with_initializer
+field_initializer_redirecting_constructor
+illegal_concrete_enum_member
+illegal_enum_values
+implicit_super_initializer_missing_arguments
+inconsistent_pattern_variable_logical_or
+invalid_annotation
+invalid_extension_argument_count
+invalid_field_name
+invalid_literal_annotation
+invalid_non_virtual_annotation
+invalid_null_aware_operator
+invalid_pattern_variable_in_shared_case_scope
+invalid_return_type_for_catch_error
+invalid_super_formal_parameter_location
+invalid_type_argument_in_const_literal
+invalid_visible_outside_template_annotation
+invocation_of_non_function_expression
+missing_default_value_for_parameter
+non_constant_map_element
+not_assigned_potentially_non_nullable_local_variable
+not_initialized_non_nullable_instance_field
+not_initialized_non_nullable_variable
+recursive_constructor_redirect
+redirect_to_invalid_function_type
+return_in_generator
+subtype_of_disallowed_type
+super_formal_parameter_without_associated_positional
+type_check_with_null
+type_parameter_supertype_of_its_bound
+undefined_constructor_in_initializer
+undefined_enum_constructor
+undefined_extension_getter
+undefined_extension_method
+undefined_extension_setter
+undefined_super_member
+unnecessary_null_comparison
+uri_does_not_exist
+uri_does_not_exist_in_doc_import
+wrong_number_of_parameters_for_setter
+wrong_number_of_type_arguments
+yield_in_non_generator
